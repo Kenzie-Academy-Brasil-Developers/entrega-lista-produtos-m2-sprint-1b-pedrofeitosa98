@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/reset.css">
+    <link rel="stylesheet" href="./src/css/style.css">
+    <title>Lista de Produtos</title>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <header>
+        <div id="filters" class="filtersContainer">
+            
+            <button class="estiloGeralBotoes estiloGeralBotoes--mostrarTodos">Mostrar Todos</button>
+            <button class="estiloGeralBotoes estiloGeralBotoes--filtrarHortifruti">Mostrar Hortifruti</button>
+
+            <div class="containerBuscaPorNome">
+                
+                <input type="text" placeholder="Nome do produto" class="campoBuscaPorNome">
+                <button class="estiloGeralBotoes estiloGeralBotoes--botaoBuscaPorNome">Buscar</button>
+
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="containerListaProdutos" id="listProdutos">
+            <ul>
+            <!-- Utilize esse item html como template para a construção da lista de produtos -->
+
+            <!-- Você pode remover esses comentários depois que fizer a construção pelo DOM -->
+
+            <!--
+                <li>
+                    <img src="./src/img/maça.png" alt="Imagem maçã">
+                    <h3>Maçã</h3>
+                    <p>R$02.00</p>
+                    <span>Seção - Hortifruti</span>
+                </li>
+            -->
+            </ul>
+        </div>
+
+        <div class="containerPrecoTotal">
+            <p>Preço total: R$<span id="precoTotal">00.00</span></p>
+        </div>
+    </main>
+
+    <script src="src/js/dataProdutos.js"></script>
+    <script src="src/js/script.js"></script>
+</body>
+</html>
