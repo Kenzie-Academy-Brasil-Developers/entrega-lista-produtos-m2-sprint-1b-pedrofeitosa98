@@ -2,6 +2,11 @@ body, * {
     font-family: 'Poppins', sans-serif;
 }
 
+.logErro {
+    color: #212529;
+    font-size: 24px;
+    text-align: center;
+}
 
 
 /* CABEÇALHO */

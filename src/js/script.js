@@ -1,6 +1,7 @@
 // VARIAVEIS GLOBAIS
 let contador = 0
-
+let quantidade = 0
+const carrinho = []
 
 // CRIANDO ESTOQUE
 function criarCard(produto) {
@@ -14,6 +15,7 @@ function criarCard(produto) {
     ul.append(liCard)
 }
 
+
 function criarCardHeader(produto){
     const cardHeader = document.createElement('img')
 
@@ -22,6 +24,7 @@ function criarCardHeader(produto){
 
     return cardHeader
 }
+
 
 function criarCardMain(produto){
     const cardMain = document.createElement('div')
@@ -32,6 +35,8 @@ function criarCardMain(produto){
     const componentes = listarComponentes(produto)
     const preco       = document.createElement('span')
     const comprar     = document.createElement('button')
+
+    eventoComprar(produto, comprar)
 
     preco.classList.add('infoCompra')
     comprar.classList.add('adicionarCarrinho')
@@ -45,6 +50,15 @@ function criarCardMain(produto){
 
     return cardMain
 }
+
+
+function eventoComprar(produto, comprar) {
+    comprar.addEventListener('click', () => {
+        carrinho.push(produto)
+        montarCarrinho(carrinho)
+    })
+}
+
 
 function listarComponentes(produto){
     const componentes = document.createElement('ol')
@@ -60,33 +74,22 @@ function listarComponentes(produto){
     return componentes
 }
 
+
 function montarDados(listaProdutos){
     const ul = document.querySelector('#listaProdutos ul')
     ul.innerHTML = ''
 
-    for (let i = 0; i < listaProdutos.length; i++){
-        const produto = listaProdutos[i]
-        criarCard(produto)
+    if(listaProdutos.length > 0){
+        for (let i = 0; i < listaProdutos.length; i++){
+            const produto = listaProdutos[i]
+            criarCard(produto)
+        }
     }
+    else {logErro()}
 }
+
 
 montarDados(produtos)
-// calcularPreco(produtos)
-
-function precoTotal(produto) {
-    const precoTotal = document.querySelector('#precoTotal')
-    contador += Number(produto.preco)
-    precoTotal.innerText = contador.toFixed(2)
-
-    return precoTotal
-}
-
-function calcularPreco(listaProdutos){
-    for (let i = 0; i < listaProdutos.length; i++){
-        const produto = listaProdutos[i]
-        precoTotal(produto)
-    }
-}
 
 
 // SEÇÃO DE FILTROS
@@ -97,6 +100,7 @@ function tornarBotoesInativos() {
         button.classList.add('botoesBase--inativo')
     })
 }
+
 
 function filtrarTodos() {
     tornarBotoesInativos()
@@ -109,6 +113,7 @@ function filtrarTodos() {
 }
 const botaoMostrarTodos = document.querySelector('#produtosTodos')
 botaoMostrarTodos.addEventListener('click', filtrarTodos)
+
 
 function filtrarPorHortifruti() {
     const listaHortifruti = produtos.filter((produto) => {
@@ -125,6 +130,7 @@ function filtrarPorHortifruti() {
 const botaoMostrarHortifruti = document.querySelector('#produtosHortifruti')
 botaoMostrarHortifruti.addEventListener('click', filtrarPorHortifruti)
 
+
 function filtrarPorPanificadora() {
     const listaPanificadora = produtos.filter((produto) => {
         return produto.secao === 'Panificadora'
@@ -139,6 +145,7 @@ function filtrarPorPanificadora() {
 }
 const botaoMostrarPanificadora = document.querySelector('#produtosPanificadora')
 botaoMostrarPanificadora.addEventListener('click', filtrarPorPanificadora)
+
 
 function filtrarPorLaticineos() {
     const listaLaticineos = produtos.filter((produto) => {
@@ -165,6 +172,7 @@ function buscarPorTexto() {
 const botaoPesquisa = document.querySelector('.botoesBase--busca')
 botaoPesquisa.addEventListener('click', buscarPorTexto)
 
+
 function filtrarPorTexto(recebeTexto) {
     const filtroPesquisa = produtos.filter((produto) => {
         return (
@@ -176,6 +184,7 @@ function filtrarPorTexto(recebeTexto) {
     montarDados(filtroPesquisa)
 }
 
+
 function logErro() {
     const ul = document.querySelector('#listaProdutos ul')
     ul.innerHTML = ''
@@ -184,34 +193,38 @@ function logErro() {
     ul.append(li)
 
     const mensagem = document.createElement('p')
-    mensagem.innerText = 'Nada encontrado'
+    mensagem.classList.add('logErro')
+    mensagem.innerHTML = '<i class="fa-solid fa-store-slash"></i> Nada encontrado'
     li.append(mensagem)
 
     return mensagem
 }
 
-/* CARRINHO DE COMPRAS */
+
+// CARRINHO DE COMPRAS
 function criarCardCarrinho(produtoComprado) {
-    const listaCarrinho = document.querySelector('.containerCarrinho__lista')
+    const ulCarrinho = document.querySelector('.containerCarrinho__lista')
     const cardCarrinho = document.createElement('li')
     cardCarrinho.classList.add('containerCarrinho__produto')
 
     const cardHeader = criarCardCarrinhoImage(produtoComprado)
     const cardMain   = criarCardCarrinhoMain(produtoComprado)
-    const cardRemove = removerProduto(produtoComprado)
+    const cardRemove = botaoRemoverProduto(produtoComprado)
 
     cardCarrinho.append(cardHeader, cardMain, cardRemove)
-    listaCarrinho.append(cardCarrinho)
+    ulCarrinho.append(cardCarrinho)
 }
+
 
 function criarCardCarrinhoImage(produtoComprado) {
     const cardImage = document.createElement('img')
 
-    cardHeader.src = produtoComprado.img
-    cardHeader.alt = produtoComprado.nome
+    cardImage.src = produtoComprado.img
+    cardImage.alt = produtoComprado.nome
 
     return cardImage
 }
+
 
 function criarCardCarrinhoMain(produtoComprado) {
     const cardMain = document.createElement('div')
@@ -230,15 +243,91 @@ function criarCardCarrinhoMain(produtoComprado) {
     return cardMain
 }
 
-function removerProduto(produtoComprado) {
+
+function botaoRemoverProduto(produtoComprado) {
     const campo = document.createElement('div')
     campo.classList.add('containerCarrinho__remove')
 
-    const botao = document.createElement('button')
-    botao.classList.add('botaoRemove')
-    botao.innerHTML = '<i class="fa-solid fa-trash"></i>'
+    const remover = document.createElement('button')
+    remover.classList.add('botaoRemove')
+    remover.innerHTML = '<i class="fa-solid fa-trash"></i>'
 
-    campo.append(botao)
+    eventoRemover(remover, produtoComprado)
+
+    campo.append(remover)
 
     return campo
 }
+
+function eventoRemover(remover, produtoComprado) {
+    remover.addEventListener('click', () => {
+        removerProduto(produtoComprado)
+        montarCarrinho(carrinho)
+    })
+}
+
+function removerProduto(produtoComprado) {
+    const indexProduto = carrinho.indexOf(produtoComprado)
+    carrinho.splice(indexProduto, 1)
+}
+
+
+function montarCarrinho(listaCarrinho){
+    const ul = document.querySelector('.containerCarrinho__lista')
+    
+        ul.innerHTML = ''
+    
+        for (let i = 0; i < listaCarrinho.length; i++){
+            const produtoComprado = listaCarrinho[i]
+            criarCardCarrinho(produtoComprado, listaCarrinho)
+        }
+
+        calcularPreco(listaCarrinho)
+        quantidadeTotal(listaCarrinho)
+}
+
+
+function precoTotal(produtoComprado) {
+    const precoTotal = document.querySelector('#precoTotal')
+    contador += Number(produtoComprado.preco)
+    console.log(contador)
+    precoTotal.innerText = `R$ ${contador.toFixed(2)}`
+}
+
+function precoZerado() {
+    const precoTotal = document.querySelector('#precoTotal')
+    contador = 0
+    console.log(contador)
+    precoTotal.innerText = `R$ ${contador.toFixed(2)}`
+}
+
+function calcularPreco(listaCarrinho){
+    contador = 0
+    if (listaCarrinho.length > 0){
+        for (let i = 0; i < listaCarrinho.length; i++){
+            const produtoComprado = listaCarrinho[i]
+            precoTotal(produtoComprado)
+        }
+    }else if(listaCarrinho.length == 0){precoZerado()}
+}
+
+
+function quantidadeTotal(listaCarrinho) {
+    const quantidadeTotal = document.querySelector('#quantidadeTotal')
+    quantidadeTotal.innerText = listaCarrinho.length
+}
+
+
+// function carrinhoVazio () {
+//     const secaoCarrinho = document.querySelector('#secaoCarrinho')
+//     const container = document.createElement('div')
+//     const icone = document.createElement('i')
+//     const texto = document.createElement('p')
+
+//     container.classList.add('containerCarrinho__lista--vazio')
+//     icone.className = 'fa-solid fa-basket-shopping'
+//     texto.innerText = 'Por enquanto não temos produtos no carrinho'
+
+//     container.append(icone, texto)
+//     secaoCarrinho.append(container)
+// }
